@@ -14,14 +14,14 @@ namespace WebLinks
 {
     internal class Program
     {
-        public List<string> weblinks = new(); 
+        public List<string> weblinks = new();
         static void Main(string[] args)
         {
             string path = ".\\files\\";
             System.IO.Directory.CreateDirectory(path);
             string filename = "Weblinks.txt";
             PrintWelcome();
-            
+
             string command;
             do
             {
@@ -36,8 +36,7 @@ namespace WebLinks
                     WriteTheHelp();
                 }
                 else if (command == "load")
-                {
-                    NotYetImplemented("load");
+                {                    
                     string loadPath;
                     //ImportLinksFromFile(loadPath); //Isak
                     ImportLinksFromFile(command);
@@ -97,12 +96,20 @@ namespace WebLinks
         public static void ImportLinksFromFile(string path)
         //ImportLinksFromFile - loads weblinks from a standardfile (ex. weblinks.lis)
         //Links consists of a name, description and URL
-        {
-            string text = File.ReadAllText("C:\\Users\\isakp\\source\\repos\\WebLinks\\Weblinks.txt");
-            string[] info = text.Split(',');
-            string address = info[2];
-            Console.WriteLine(address);
-            //code...
+        {           
+            string homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            string filePath = Path.Combine(homeDirectory, "source", "repos", "WebLinks", "Weblinks.txt");
+            string text = File.ReadAllText(filePath);
+
+            string[] rows = text.Split("\n");
+
+            var n = 0;
+
+            foreach (string row in rows)
+            {
+                n++;
+                Console.WriteLine($"{n}, {row}");
+            }           
         }
         public static void ListLinks()
         //Lists all weblinks currently loaded into weblinks array.
@@ -113,7 +120,8 @@ namespace WebLinks
         //Opens a link from the weblinks array in native browser
         {
             string[] splString = Link.Split(' ');
-            if ( splString.Length == 0 ) {
+            if (splString.Length == 0)
+            {
                 WriteLine();
             }
             //code...
