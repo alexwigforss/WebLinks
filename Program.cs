@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
+using static System.Console;
 
 namespace WebLinks
 /*-------------------------- WebLinks.cs --------------------------
@@ -18,14 +19,14 @@ namespace WebLinks
         {
             string path = ".\\files\\";
             System.IO.Directory.CreateDirectory(path);
-            string filename = "list.lis";
+            string filename = "Weblinks.txt";
             PrintWelcome();
             
             string command;
             do
             {
                 Console.Write(": ");
-                command = Console.ReadLine();
+                command = ReadLine();
                 if (command == "quit")
                 {
                     Console.WriteLine("Good bye!");
@@ -65,21 +66,21 @@ namespace WebLinks
                 }
                 else
                 {
-                    Console.WriteLine($"Unknown command '{command}'");
+                    WriteLine($"Unknown command '{command}'");
                 }
             } while (command != "quit");
         }
 
         private static void NotYetImplemented(string command)
         {
-            Console.WriteLine($"Sorry: '{command}' is not yet implemented");
+            WriteLine($"Sorry: '{command}' is not yet implemented");
         }
 
         private static void PrintWelcome()
         {
-            Console.WriteLine("Hello and welcome to the ... program ...");
-            Console.WriteLine("that does ... something.");
-            Console.WriteLine("Write 'help' for help!");
+            WriteLine("Hello and welcome to the ... program ...");
+            WriteLine("that does ... something.");
+            WriteLine("Write 'help' for help!");
         }
 
         private static void WriteTheHelp()
@@ -106,6 +107,10 @@ namespace WebLinks
         public static void OpenWeblink(string Link)
         //Opens a link from the weblinks array in native browser
         {
+            string[] splString = Link.Split(' ');
+            if ( splString.Length == 0 ) {
+                WriteLine();
+            }
             //code...
         }
         public static void AddLink(string name, string url, string info)
