@@ -39,6 +39,7 @@ namespace WebLinks
                     NotYetImplemented("load");
                     string loadPath;
                     //ImportLinksFromFile(loadPath); //Isak
+                    ImportLinksFromFile(command);
                 }
                 else if (command == "open")
                 {
@@ -96,6 +97,10 @@ namespace WebLinks
         //ImportLinksFromFile - loads weblinks from a standardfile (ex. weblinks.lis)
         //Links consists of a name, description and URL
         {
+            string text = File.ReadAllText("C:\\Users\\isakp\\source\\repos\\WebLinks\\Weblinks.txt");
+            string[] info = text.Split(',');
+            string address = info[2];
+            Console.WriteLine(address);
             //code...
         }
         public static void ListLinks()
