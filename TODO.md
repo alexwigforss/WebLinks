@@ -7,9 +7,13 @@
 Fördelning av metoder:
 
 - Load: Isak
+ * -Implementera open med Weblink lista
 - Open: Alex
+ * -Implementera open med Weblink lista
 - Add: Sebastian
+ * -Förfinar Welcome och help
 - Save: Isak
+
 
 # 1. ladda weblänkar från en standardfil (t.ex. weblinks.lis) genom ett kommando,
 weblänkarna skall ha ett namn, en beskrivning och en URL – i ett senare steg skall man
