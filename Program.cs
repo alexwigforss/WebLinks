@@ -148,7 +148,6 @@ namespace WebLinks
             string[] splString = Link.Split(' ');
             if (splString.Length == 1 ) {
                 WriteLine("Ange Länk och tryck på enter");
-                //ReadLine();
                 BrowserProces(@ReadLine());
                 // Kommentar, här skulle man kunna checka så att det är en url som angivits
             }
@@ -159,14 +158,14 @@ namespace WebLinks
             }
             else if (splString.Length > 2)
             {
+                // Överflödig just nu, men för att hantera flera "flaggor" senare kanske
                 WriteLine("För mkt data men vi kastar bort överflödet");
                 BrowserProces(splString[1]);
             }
-            //BrowserProces(@"http://google.com");
             // code...
         }
         /// <summary>
-        /// Ska öppna default webbläsaren med vald länk
+        /// Öppnar default webbläsaren med vald länk
         /// </summary>
         public static void BrowserProces(string Link)
         {
