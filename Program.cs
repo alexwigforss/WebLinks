@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
+using System.Net.Sockets;
 
 namespace WebLinks
 /*-------------------------- WebLinks.cs --------------------------
@@ -11,11 +13,14 @@ namespace WebLinks
 {
     internal class Program
     {
-
-        
+        public List<string> weblinks = new(); 
         static void Main(string[] args)
         {
+            string path = ".\\files\\";
+            System.IO.Directory.CreateDirectory(path);
+            string filename = "list.lis";
             PrintWelcome();
+            
             string command;
             do
             {
@@ -33,30 +38,30 @@ namespace WebLinks
                 {
                     NotYetImplemented("load");
                     string loadPath;
-                    //ImportLinksFromFile(loadPath);
+                    //ImportLinksFromFile(loadPath); //Isak
                 }
                 else if (command == "open")
                 {
                     NotYetImplemented("open");
                     string openName;
-                    //OpenWeblink(openName);
+                    //OpenWeblink(openName); //Alex
                 }
                 else if (command == "list")
                 {
                     NotYetImplemented("list");
-                    //ListLinks();
+                    //ListLinks(); //Sebastian
                 }
                 else if (command == "add")
                 {
                     NotYetImplemented("add");
                     string addName, addUrl, addInfo;
-                    //AddLink(addName, addUrl, addInfo);
+                    //AddLink(addName, addUrl, addInfo); //Sebastian
                 }
                 else if (command == "save")
                 {
                     NotYetImplemented("save");
                     string saveFile;
-                    //SaveWebLinks(saveFile);
+                    //SaveWebLinks(saveFile); //Isak
                 }
                 else
                 {
@@ -87,8 +92,6 @@ namespace WebLinks
             };
             foreach (string h in hstr) Console.WriteLine(h);
         }
-        public string[] weblinks = new string[50];
-        //The list of weblinks for use in the program. *PLACEHOLDER*, format (array or list, size) is not finalized.
         public static void ImportLinksFromFile(string path)
         //ImportLinksFromFile - loads weblinks from a standardfile (ex. weblinks.lis)
         //Links consists of a name, description and URL
