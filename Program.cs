@@ -21,6 +21,7 @@ namespace WebLinks
             string path = ".\\files\\";
             System.IO.Directory.CreateDirectory(path);
             string filename = "Weblinks.txt";
+            Program p = new Program();
             PrintWelcome();
 
             string command;
@@ -49,14 +50,21 @@ namespace WebLinks
                 }
                 else if (command == "list")
                 {
-                    NotYetImplemented("list");
-                    //ListLinks(); //Sebastian
+                    p.ListLinks();
+                    PrintContinue();
                 }
                 else if (command == "add")
                 {
-                    NotYetImplemented("add");
                     string addName, addUrl, addInfo;
-                    //AddLink(addName, addUrl, addInfo); //Sebastian
+                    Console.Write("Add: Lägg till en länk i listan (namn, url, beskrivning)\nNamn: ");
+                    addName = Console.ReadLine();
+                    Console.Write("URL: ");
+                    addUrl = Console.ReadLine();
+                    Console.Write("Beskrivning: ");
+                    addInfo = Console.ReadLine();
+                    p.AddLink(addName, addUrl, addInfo);
+                    Console.WriteLine("\n");
+                    PrintContinue();
                 }
                 else if (command == "save")
                 {
@@ -81,6 +89,11 @@ namespace WebLinks
             WriteLine("Hello and welcome to the ... program ...");
             WriteLine("that does ... something.");
             WriteLine("Write 'help' for help!");
+        }
+
+        private static void PrintContinue()
+        {
+            WriteLine("\nNext command?");
         }
 
         private static void WriteTheHelp()
@@ -111,10 +124,19 @@ namespace WebLinks
                 Console.WriteLine($"{n}, {row}");
             }           
         }
-        public static void ListLinks()
-        //Lists all weblinks currently loaded into weblinks array.
+        public void ListLinks()
+        //Lists all weblinks currently loaded into weblinks list.
         {
-            //code...
+            Console.WriteLine("\nWeblinks:\n\n");
+            int i = 0;
+            weblinks.ForEach(link =>
+            {
+                Console.WriteLine(
+                $"{++i}: " +
+                $"Namn:        {link.Split(',')[0]}\n" +
+                $"   Beskrivning: {link.Split(',')[1]}\n" +
+                $"   URL          {link.Split(',')[2]}\n");
+            });
         }
         public static void OpenWeblink(string Link)
         //Opens a link from the weblinks array in native browser
@@ -151,10 +173,10 @@ namespace WebLinks
             }
         }
 
-        public static void AddLink(string name, string url, string info)
+        public void AddLink(string name, string url, string info)
         //Add a weblink to the array from console.
         {
-            //code...
+            weblinks.Add($"{name},{info},{url}");
         }
         public static void SaveWebLinks(string path)
         //Save the current weblinks array to file
