@@ -22,6 +22,9 @@ namespace WebLinks
             System.IO.Directory.CreateDirectory(path);
             string filename = "Weblinks.txt";
             Program p = new Program();
+            string homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            string filePath = Path.Combine(homeDirectory, "source", "repos", "WebLinks", "Weblinks.txt");
+
             PrintWelcome();
 
             string command;
@@ -41,7 +44,7 @@ namespace WebLinks
                 {                    
                     string loadPath;
                     //ImportLinksFromFile(loadPath); //Isak
-                    ImportLinksFromFile(command);
+                    ImportLinksFromFile(filePath);
                 }
                 else if (command.Split()[0] == "open")
                 {
@@ -52,6 +55,7 @@ namespace WebLinks
                 {
                     p.ListLinks();
                     PrintContinue();
+
                 }
                 else if (command == "add")
                 {
@@ -68,9 +72,7 @@ namespace WebLinks
                 }
                 else if (command == "save")
                 {
-                    NotYetImplemented("save");
-                    string saveFile;
-                    //SaveWebLinks(saveFile); //Isak
+                    p.SaveWebLinks(filePath);
                 }
                 else
                 {
@@ -86,9 +88,9 @@ namespace WebLinks
 
         private static void PrintWelcome()
         {
-            WriteLine("Hello and welcome to the ... program ...");
-            WriteLine("that does ... something.");
-            WriteLine("Write 'help' for help!");
+            WriteLine("Hello and welcome to the WebLinks program!\n\n");
+            WriteLine("Weblinks manages a library of links stored in a local file.\nFrom the terminal you can load the file, add new links, open links in your web browser and save the list to the file.");
+            WriteLine("\nWrite 'help' for help!");
         }
 
         private static void PrintContinue()
@@ -100,18 +102,20 @@ namespace WebLinks
         {
             string[] hstr = {
                 "help  - display this help",
-                "load  - load all links from a file",
+                "load  - load all links from the weblinks.txt file to the list",
+                "add   - manually enter data for a new link to the list",
+                "list  - display all currently loaded weblinks",
                 "open  - open a specific link",
+                "save  - save current list of weblinks to weblinks.txt file",
                 "quit  - quit the program"
             };
             foreach (string h in hstr) Console.WriteLine(h);
         }
-        public static void ImportLinksFromFile(string path)
+        public static void ImportLinksFromFile(string filePath)
         //ImportLinksFromFile - loads weblinks from a standardfile (ex. weblinks.lis)
         //Links consists of a name, description and URL
         {           
-            string homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            string filePath = Path.Combine(homeDirectory, "source", "repos", "WebLinks", "Weblinks.txt");
+            
             string text = File.ReadAllText(filePath);
 
             string[] rows = text.Split("\n");
@@ -179,10 +183,26 @@ namespace WebLinks
         {
             weblinks.Add($"{name},{info},{url}");
         }
-        public static void SaveWebLinks(string path)
+        public void SaveWebLinks(string path)
         //Save the current weblinks array to file
         {
-            //code...
+            if (File.Exists(path))
+            {
+                string input;
+                do
+                {
+                    Console.Write("File already exists. Overwrite (y/n)?: ");
+                    input = Console.ReadLine();
+                } while (input != "y" && input != "n");
+                if (input == "n") return;
+            }
+            File.Create(path).Dispose();
+            StreamWriter writer = new StreamWriter(path);
+            for (int i = 0; i < weblinks.Count; i++)
+            {
+                writer.WriteLine("testar");
+                WriteLine("Writing: " + weblinks[i]);
+            }
         }
     }
 }
