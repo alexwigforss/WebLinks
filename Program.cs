@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
 using static System.Console;
@@ -29,7 +30,7 @@ namespace WebLinks
                 command = ReadLine();
                 if (command == "quit")
                 {
-                    Console.WriteLine("Good bye!");
+                    WriteLine("Good bye!");
                 }
                 else if (command == "help")
                 {
@@ -41,11 +42,10 @@ namespace WebLinks
                     string loadPath;
                     //ImportLinksFromFile(loadPath); //Isak
                 }
-                else if (command == "open")
+                else if (command.Split()[0] == "open")
                 {
-                    NotYetImplemented("open");
-                    string openName;
-                    //OpenWeblink(openName); //Alex
+                    // NotYetImplemented("open");
+                    OpenWeblink(command); //Alex
                 }
                 else if (command == "list")
                 {
@@ -68,7 +68,7 @@ namespace WebLinks
                 {
                     WriteLine($"Unknown command '{command}'");
                 }
-            } while (command != "quit");
+            } while (command != "quit" && command != "exit");
         }
 
         private static void NotYetImplemented(string command)
@@ -108,11 +108,38 @@ namespace WebLinks
         //Opens a link from the weblinks array in native browser
         {
             string[] splString = Link.Split(' ');
-            if ( splString.Length == 0 ) {
-                WriteLine();
+            if (splString.Length == 1 ) {
+                WriteLine("Ange Länk och tryck på enter");
+                //ReadLine();
+                BrowserProces(@ReadLine());
+                // Kommentar, här skulle man kunna checka så att det är en url som angivits
             }
-            //code...
+            else if (splString.Length == 2)
+            {
+                WriteLine("Rätt mängd data för att utföra åtgärden");
+                BrowserProces(splString[1]);
+            }
+            else if (splString.Length > 2)
+            {
+                WriteLine("För mkt data men vi kastar bort överflödet");
+                BrowserProces(splString[1]);
+            }
+            //BrowserProces(@"http://google.com");
+            // code...
         }
+        /// <summary>
+        /// Ska öppna default webbläsaren med vald länk
+        /// </summary>
+        public static void BrowserProces(string Link)
+        {
+            using (Process browspr = new Process())
+            {
+                browspr.StartInfo.FileName = Link;
+                browspr.StartInfo.UseShellExecute = true;
+                browspr.Start();
+            }
+        }
+
         public static void AddLink(string name, string url, string info)
         //Add a weblink to the array from console.
         {
