@@ -1,1 +1,3 @@
 SVT, Svergies Television, https://www.svt.se/
+Google, Sökmotorn Google, https://www.google.com/
+Youtube, Youtubes hemsida, https://www.youtube.com/
