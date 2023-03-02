@@ -4,6 +4,13 @@
 * Sebastian(Main-Ansvarig) Börjar på funktionsskelletet
 * Alex(Git-Ansvarig) Initierar repot och denna Todo-fil
 
+Fördelning av metoder:
+
+- Load: Isak
+- Open: Alex
+- Add: Sebastian
+- Save: Isak
+
 # 1. ladda weblänkar från en standardfil (t.ex. weblinks.lis) genom ett kommando,
 weblänkarna skall ha ett namn, en beskrivning och en URL – i ett senare steg skall man
 kunna ladda olika filer per filnamn – och i ännu senare steg kan man kanske göra en lista på
