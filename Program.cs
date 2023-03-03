@@ -113,8 +113,8 @@ namespace WebLinks
         private static void PrintWelcome()
         {
             WriteLine("Hello and welcome to the WebLinks program!\n\n");
-            WriteLine("Weblinks manages a library of links stored in a local file.\nFrom the terminal you can load the file, add new links, open links in your web browser and save the list to the file.");
-            WriteLine("\nWrite 'help' for help!");
+            WriteLine("Weblinks manages a list of weblinks.\nFrom the terminal you view the links, add new links and open the links in your web browser.\nYou can also save the list to a file or load the list from a previously saved file.");
+            WriteLine("\n\nFor a list of commands, write: 'help'");
         }
 
         private static void PrintContinue()
@@ -126,7 +126,7 @@ namespace WebLinks
         {
             string[] hstr = {
                 "  help            - display this help",
-                "  load <file.txt> - load all links from <file.txt> file to the list",
+                "  load            - load all links from a file to the list",
                 "  pwd             - show path to current working directory",
                 "  cd <folder>     - change working directory to <folder>. Use cd '..' to go up one folder",
                 "  mkdir <folder>  - create new folder <folder> in working directory",
@@ -146,8 +146,13 @@ namespace WebLinks
 
         public void ShowDirectory(string directory)
         {
+            string[] folders = Directory.GetDirectories(directory);
             string[] files = Directory.GetFiles(directory);
-
+            foreach (string folder in folders)
+            {
+                string f = folder.Split('\\')[folder.Split('\\').Length - 1];
+                WriteLine("  " + f);
+            }
             foreach (string file in files)
             {
                 Console.WriteLine(Path.GetFileName(file));
