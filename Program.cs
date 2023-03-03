@@ -278,8 +278,9 @@ namespace WebLinks
 
             for (int i = 0; i < weblinks.Count; i++)
             {
-                writer.WriteLine(weblinks[i]);
-                //WriteLine("Writing: " + weblinks[i]);
+                if (i != 0) writer.Write("\n");
+                writer.Write(weblinks[i]);
+                WriteLine("Writing: " + weblinks[i]);
             }
             writer.Close();
             WriteLine("File successfully saved");
