@@ -136,6 +136,10 @@ namespace WebLinks
             }
             ) ;
         }
+        /// <summary>
+        /// Hittar länk i listan med index eller label
+        /// </summary>
+        /// <param name="Link"></param>
         public void OpenWeblink(string Link)
         //Opens a link from the weblinks array in native browser
         {
@@ -177,17 +181,7 @@ namespace WebLinks
                     string[] a = weblinks.ElementAt(index).Split(',');
                     BrowserProces(a[2].Trim());
                 }
-                // WriteLine("Rätt mängd data för att utföra åtgärden: ");
-                // BrowserProces(splString[1]);
             }
-            // // Förmodligen onödig Marked for removal
-            //else if (splString.Length > 2)
-            //{
-            //    // Överflödig just nu, men för att hantera flera "flaggor" senare kanske
-            //    WriteLine("För mkt data men vi kastar bort överflödet");
-            //    BrowserProces(splString[1]);
-            //}
-            // code...
         }
         /// <summary>
         /// Öppnar default webbläsaren med vald länk
