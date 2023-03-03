@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
+using System.Reflection.PortableExecutable;
 using System.Runtime.CompilerServices;
 using System.Xml;
 using System.Xml.Linq;
@@ -21,12 +22,9 @@ namespace WebLinks
         public List<string> weblinks = new();
         static void Main(string[] args)
         {
-            string path = ".\\files\\";
-            System.IO.Directory.CreateDirectory(path);
-            string filename = "Weblinks.txt";
             Program p = new Program();
             string homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            string filePath = Path.Combine(homeDirectory, "source", "repos", "WebLinks", "Weblinks.txt");
+            string filePath = Path.Combine(homeDirectory, "source", "repos", "WebLinks"/*, "Weblinks.txt"*/);
 
             PrintWelcome();
 
@@ -44,9 +42,9 @@ namespace WebLinks
                     WriteTheHelp();
                 }
                 else if (command == "load")
-                {                    
+                {
                     //ImportLinksFromFile(loadPath); //Isak
-                    p.ImportLinksFromFile(filePath);
+                    p.ImportLinksFromFile(filePath, "weblinks.txt");
                 }
                 else if (command.Split()[0] == "open")
                 {
@@ -60,6 +58,7 @@ namespace WebLinks
                 }
                 else if (command == "add")
                 {
+                    if (File.Exists("zenity.exe") || File.Exists("C:\\Windows\\zenity.exe") || File.Exists("C:\\Windows\\System32\\zenity.exe")) { p.AddLinksZenity(); continue; }
                     string addName, addUrl, addInfo;
                     Console.Write("Add: Lägg till en länk i listan (namn, url, beskrivning)\nNamn: ");
                     addName = ReadLine();
@@ -71,9 +70,18 @@ namespace WebLinks
                     Console.WriteLine("\n");
                     PrintContinue();
                 }
-                else if (command == "save")
+                else if (command.Split(' ')[0] == "save")
                 {
-                    p.SaveWebLinks(filePath);
+                    p.SaveWebLinks(filePath, command);
+                }
+                else if (command == "pwd")
+                {
+                    p.PresentWorkingDirectory(filePath);
+                }
+                else if (command.Split(' ')[0] == "cd")
+                {
+                    if (command.Split(' ').Length == 2) { filePath = p.ChangeDirectory(filePath, command.Split(' ')[1]); p.PresentWorkingDirectory(filePath); }
+                    else WriteLine("Syntax for 'cd' : 'cd <directory>' to go to directory    'cd ..' to move up one directory");
                 }
                 else
                 {
@@ -112,10 +120,11 @@ namespace WebLinks
             };
             foreach (string h in hstr) Console.WriteLine(h);
         }
-        public void ImportLinksFromFile(string filePath)
+        public void ImportLinksFromFile(string path, string file)
         //ImportLinksFromFile - loads weblinks from a standardfile (ex. weblinks.lis)
         //Links consists of a name, description and URL
         {                      
+            string filePath = Path.Combine(path, file);
             var rows = File.ReadAllLines(filePath);
 
             weblinks.AddRange(rows);
@@ -182,10 +191,14 @@ namespace WebLinks
         {
             weblinks.Add($"{name},{info},{url}");
         }
-        public void SaveWebLinks(string path)
+        public void SaveWebLinks(string path, string command)
         //Save the current weblinks array to file
         {
-            if (File.Exists(path))
+            string file;
+            if (command.Split(" ").Length != 1) file = command.Split(" ")[1];
+            else { Console.Write("Add filename: "); file = Console.ReadLine(); }
+            file = path + "\\" + file;
+            if (File.Exists(file))
             {
                 string input;
                 do
@@ -195,18 +208,53 @@ namespace WebLinks
                 } while (input != "y" && input != "n");
                 if (input == "n") return;
             }
-            File.Create(path).Dispose();
-            StreamWriter writer = new StreamWriter(path);
+            File.Create(file).Dispose();
+            StreamWriter writer = new StreamWriter(file);
 
             for (int i = 0; i < weblinks.Count; i++)
             {
                 writer.WriteLine(weblinks[i]);
-                WriteLine("Writing: " + weblinks[i]);
+                //WriteLine("Writing: " + weblinks[i]);
             }
             writer.Close();
+            WriteLine("File successfully saved");
             //Debug: Open the file:
             //Process.Start("explorer", path);
 
+        }
+        public void AddLinksZenity()
+        {
+            Process proc = new Process();
+            //Start zenity form:
+            proc.StartInfo.FileName = "zenity.exe";
+            proc.StartInfo.Arguments = "--forms --add-entry=\"Name\" --add-entry=\"Info\" --add-entry=\"URL\"";
+            proc.StartInfo.RedirectStandardOutput = true;
+            proc.Start();
+            StreamReader reader = proc.StandardOutput;
+            string input = reader.ReadToEnd().Replace('|',',');
+            proc.WaitForExit();
+            weblinks.Add(input);
+        }
+        public void PresentWorkingDirectory(string path)
+        {
+            Console.WriteLine(path);
+        }
+        public string ChangeDirectory(string path, string folder)
+        {
+            string newPath = "";
+            if (folder == "..")
+            {
+                string[] splitPath = path.Split('\\');
+                for (int i = 0; i < splitPath.Length - 1; i++) 
+                {
+                    newPath = Path.Combine(newPath, splitPath[i]);
+                }
+                return newPath;
+            }
+            newPath = Path.Combine(path, folder);
+            if (Directory.Exists(newPath) && folder != ".") return newPath;
+            WriteLine("Folder does not exist");
+            return path;
         }
     }
 }
