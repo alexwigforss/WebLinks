@@ -61,14 +61,14 @@ namespace WebLinks
                 else if (command == "add")
                 {
                     string addName, addUrl, addInfo;
-                    Console.Write("Add: Lägg till en länk i listan (namn, url, beskrivning)\nNamn: ");
+                    Write("Add: Lägg till en länk i listan (namn, url, beskrivning)\nNamn: ");
                     addName = ReadLine();
-                    Console.Write("URL: ");
+                    Write("URL: ");
                     addUrl = ReadLine();
-                    Console.Write("Beskrivning: ");
+                    Write("Beskrivning: ");
                     addInfo = ReadLine();
                     p.AddLink(addName, addUrl, addInfo);
-                    Console.WriteLine("\n");
+                    WriteLine("\n");
                     PrintContinue();
                 }
                 else if (command == "save")
@@ -158,19 +158,35 @@ namespace WebLinks
                     string[] a = weblinks.ElementAt(index).Split(',');
                     BrowserProces(a[2].Trim());
                 }
-                // Kommentar, här skulle man kunna checka så att det är en url som angivits
             }
             else if (splString.Length == 2)
             {
-                WriteLine("Rätt mängd data för att utföra åtgärden: ");
-                BrowserProces(splString[1]);
+                WriteLine("Ange Namn Eller Nummer för länken du vill öppna.");
+                string rl = splString[1];
+                int index;
+                if (int.TryParse(rl, out index))
+                {
+                    // Om Int hämta rad med index
+                    string[] a = weblinks.ElementAt(index - 1).Split(',');
+                    BrowserProces(a[2].Trim());
+                }
+                else
+                {
+                    // Om sträng hitta index med contains
+                    index = weblinks.FindIndex(a => a.Contains(rl));
+                    string[] a = weblinks.ElementAt(index).Split(',');
+                    BrowserProces(a[2].Trim());
+                }
+                // WriteLine("Rätt mängd data för att utföra åtgärden: ");
+                // BrowserProces(splString[1]);
             }
-            else if (splString.Length > 2)
-            {
-                // Överflödig just nu, men för att hantera flera "flaggor" senare kanske
-                WriteLine("För mkt data men vi kastar bort överflödet");
-                BrowserProces(splString[1]);
-            }
+            // // Förmodligen onödig Marked for removal
+            //else if (splString.Length > 2)
+            //{
+            //    // Överflödig just nu, men för att hantera flera "flaggor" senare kanske
+            //    WriteLine("För mkt data men vi kastar bort överflödet");
+            //    BrowserProces(splString[1]);
+            //}
             // code...
         }
         /// <summary>
