@@ -142,8 +142,19 @@ namespace WebLinks
             string[] splString = Link.Split(' ');
             if (splString.Length == 1)
             {
-                WriteLine("Ange Länk och tryck på enter");
-                BrowserProces(@ReadLine());
+                WriteLine("Ange Namn Eller Nummer för länken du vill öppna.");
+                int index;
+                if(int.TryParse(ReadLine(), out index))
+                {
+                    string[] a = weblinks.ElementAt(index-1).Split(',');
+                    // Om Int hämta rad med index
+                    BrowserProces(a[2].Trim());
+                }
+                else
+                {
+                    // Om sträng hitta sök index sedan rad.
+                    BrowserProces(@ReadLine());
+                }
                 // Kommentar, här skulle man kunna checka så att det är en url som angivits
             }
             else if (splString.Length == 2)
