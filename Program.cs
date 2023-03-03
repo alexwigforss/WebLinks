@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
 using static System.Console;
 
 namespace WebLinks
@@ -42,7 +43,6 @@ namespace WebLinks
                 }
                 else if (command == "load")
                 {                    
-                    string loadPath;
                     //ImportLinksFromFile(loadPath); //Isak
                     ImportLinksFromFile(filePath);
                 }
@@ -134,13 +134,12 @@ namespace WebLinks
             Console.WriteLine("\nWeblinks:\n\n");
             int i = 0;
             weblinks.ForEach(link =>
-            {
                 Console.WriteLine(
                 $"{++i}: " +
                 $"Namn:        {link.Split(',')[0]}\n" +
                 $"   Beskrivning: {link.Split(',')[1]}\n" +
-                $"   URL          {link.Split(',')[2]}\n");
-            });
+                $"   URL          {link.Split(',')[2]}\n")
+            );
         }
         public static void OpenWeblink(string Link)
         //Opens a link from the weblinks array in native browser
@@ -197,11 +196,15 @@ namespace WebLinks
             }
             File.Create(path).Dispose();
             StreamWriter writer = new StreamWriter(path);
+
             for (int i = 0; i < weblinks.Count; i++)
             {
-                writer.WriteLine("testar");
+                writer.WriteLine(weblinks[i]);
                 WriteLine("Writing: " + weblinks[i]);
             }
+            writer.Close();
+            Process.Start("explorer", path);
+
         }
     }
 }
