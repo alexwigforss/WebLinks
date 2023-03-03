@@ -2,12 +2,9 @@
 using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
-<<<<<<< HEAD
 using System.Runtime.CompilerServices;
-=======
 using System.Xml;
 using System.Xml.Linq;
->>>>>>> 1b63255c0330ce97b0d4e03eaec76858726b383d
 using static System.Console;
 
 namespace WebLinks
@@ -47,15 +44,9 @@ namespace WebLinks
                     WriteTheHelp();
                 }
                 else if (command == "load")
-<<<<<<< HEAD
                 {                    
                     //ImportLinksFromFile(loadPath); //Isak
-                    ImportLinksFromFile(filePath);
-=======
-                {
-                    string loadPath;                    
                     p.ImportLinksFromFile(filePath);
->>>>>>> 1b63255c0330ce97b0d4e03eaec76858726b383d
                 }
                 else if (command.Split()[0] == "open")
                 {
@@ -207,7 +198,8 @@ namespace WebLinks
                 WriteLine("Writing: " + weblinks[i]);
             }
             writer.Close();
-            Process.Start("explorer", path);
+            //Debug: Open the file:
+            //Process.Start("explorer", path);
 
         }
     }
