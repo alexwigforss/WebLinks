@@ -127,6 +127,9 @@ namespace WebLinks
                 "add   - manually enter data for a new link to the list",
                 "list  - display all currently loaded weblinks",
                 "open  - open a specific link",
+                "       e.g. open [Index] open Url by list index",
+                "            open [Title] open Url by Title",
+                "            open (without flag will prompt u for above)",
                 "save  - save current list of weblinks to weblinks.txt file",
                 "quit  - quit the program"
             };
