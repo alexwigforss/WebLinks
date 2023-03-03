@@ -44,7 +44,11 @@ namespace WebLinks
                 else if (command == "load")
                 {
                     //ImportLinksFromFile(loadPath); //Isak
-                    p.ImportLinksFromFile(filePath, "weblinks.txt");
+                    p.ImportLinksFromFile(filePath, "weblinks.txt");                   
+                }
+                else if (command == "directory")
+                {
+                    p.ShowDirectory(filePath);
                 }
                 else if (command.Split()[0] == "open")
                 {
@@ -60,14 +64,14 @@ namespace WebLinks
                 {
                     if (File.Exists("zenity.exe") || File.Exists("C:\\Windows\\zenity.exe") || File.Exists("C:\\Windows\\System32\\zenity.exe")) { p.AddLinksZenity(); continue; }
                     string addName, addUrl, addInfo;
-                    Console.Write("Add: Lägg till en länk i listan (namn, url, beskrivning)\nNamn: ");
+                    Write("Add: Lägg till en länk i listan (namn, url, beskrivning)\nNamn: ");
                     addName = ReadLine();
-                    Console.Write("URL: ");
+                    Write("URL: ");
                     addUrl = ReadLine();
-                    Console.Write("Beskrivning: ");
+                    Write("Beskrivning: ");
                     addInfo = ReadLine();
                     p.AddLink(addName, addUrl, addInfo);
-                    Console.WriteLine("\n");
+                    WriteLine("\n");
                     PrintContinue();
                 }
                 else if (command.Split(' ')[0] == "save")
@@ -112,6 +116,7 @@ namespace WebLinks
             string[] hstr = {
                 "help  - display this help",
                 "load  - load all links from the weblinks.txt file to the list",
+                "directory - show all files",
                 "add   - manually enter data for a new link to the list",
                 "list  - display all currently loaded weblinks",
                 "open  - open a specific link",
@@ -120,6 +125,19 @@ namespace WebLinks
             };
             foreach (string h in hstr) Console.WriteLine(h);
         }
+
+        public void ShowDirectory(string directory)
+        {
+            string homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            string filePath = Path.Combine(homeDirectory, "source", "repos", "WebLinks", "Weblinks");
+            string[] files = Directory.GetFiles(filePath);
+
+            foreach (string file in files)
+            {
+                Console.WriteLine(Path.GetFileName(file));
+            }
+        }
+
         public void ImportLinksFromFile(string path, string file)
         //ImportLinksFromFile - loads weblinks from a standardfile (ex. weblinks.lis)
         //Links consists of a name, description and URL
@@ -145,28 +163,52 @@ namespace WebLinks
             }
             ) ;
         }
+        /// <summary>
+        /// Hittar länk i listan med index eller label
+        /// </summary>
+        /// <param name="Link"></param>
         public void OpenWeblink(string Link)
         //Opens a link from the weblinks array in native browser
         {
             string[] splString = Link.Split(' ');
             if (splString.Length == 1)
             {
-                WriteLine("Ange Länk och tryck på enter");
-                BrowserProces(@ReadLine());
-                // Kommentar, här skulle man kunna checka så att det är en url som angivits
+                WriteLine("Ange Namn Eller Nummer för länken du vill öppna.");
+                string rl = ReadLine();
+                int index;
+                if(int.TryParse(rl, out index))
+                {
+                    // Om Int hämta rad med index
+                    string[] a = weblinks.ElementAt(index-1).Split(',');
+                    BrowserProces(a[2].Trim());
+                }
+                else
+                {
+                    // Om sträng hitta index med contains
+                    index = weblinks.FindIndex(a => a.Contains(rl));
+                    string[] a = weblinks.ElementAt(index).Split(',');
+                    BrowserProces(a[2].Trim());
+                }
             }
             else if (splString.Length == 2)
             {
-                WriteLine("Rätt mängd data för att utföra åtgärden: ");
-                BrowserProces(splString[1]);
+                WriteLine("Ange Namn Eller Nummer för länken du vill öppna.");
+                string rl = splString[1];
+                int index;
+                if (int.TryParse(rl, out index))
+                {
+                    // Om Int hämta rad med index
+                    string[] a = weblinks.ElementAt(index - 1).Split(',');
+                    BrowserProces(a[2].Trim());
+                }
+                else
+                {
+                    // Om sträng hitta index med contains
+                    index = weblinks.FindIndex(a => a.Contains(rl));
+                    string[] a = weblinks.ElementAt(index).Split(',');
+                    BrowserProces(a[2].Trim());
+                }
             }
-            else if (splString.Length > 2)
-            {
-                // Överflödig just nu, men för att hantera flera "flaggor" senare kanske
-                WriteLine("För mkt data men vi kastar bort överflödet");
-                BrowserProces(splString[1]);
-            }
-            // code...
         }
         /// <summary>
         /// Öppnar default webbläsaren med vald länk
