@@ -2,7 +2,12 @@
 using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
+<<<<<<< HEAD
 using System.Runtime.CompilerServices;
+=======
+using System.Xml;
+using System.Xml.Linq;
+>>>>>>> 1b63255c0330ce97b0d4e03eaec76858726b383d
 using static System.Console;
 
 namespace WebLinks
@@ -42,9 +47,15 @@ namespace WebLinks
                     WriteTheHelp();
                 }
                 else if (command == "load")
+<<<<<<< HEAD
                 {                    
                     //ImportLinksFromFile(loadPath); //Isak
                     ImportLinksFromFile(filePath);
+=======
+                {
+                    string loadPath;                    
+                    p.ImportLinksFromFile(filePath);
+>>>>>>> 1b63255c0330ce97b0d4e03eaec76858726b383d
                 }
                 else if (command.Split()[0] == "open")
                 {
@@ -111,22 +122,14 @@ namespace WebLinks
             };
             foreach (string h in hstr) Console.WriteLine(h);
         }
-        public static void ImportLinksFromFile(string filePath)
+        public void ImportLinksFromFile(string filePath)
         //ImportLinksFromFile - loads weblinks from a standardfile (ex. weblinks.lis)
         //Links consists of a name, description and URL
-        {           
-            
-            string text = File.ReadAllText(filePath);
+        {                      
+            var rows = File.ReadAllLines(filePath);
 
-            string[] rows = text.Split("\n");
-
-            var n = 0;
-
-            foreach (string row in rows)
-            {
-                n++;
-                Console.WriteLine($"{n}, {row}");
-            }           
+            weblinks.AddRange(rows);
+            weblinks = weblinks.Distinct().ToList();
         }
         public void ListLinks()
         //Lists all weblinks currently loaded into weblinks list.
@@ -145,7 +148,8 @@ namespace WebLinks
         //Opens a link from the weblinks array in native browser
         {
             string[] splString = Link.Split(' ');
-            if (splString.Length == 1 ) {
+            if (splString.Length == 1)
+            {
                 WriteLine("Ange Länk och tryck på enter");
                 BrowserProces(@ReadLine());
                 // Kommentar, här skulle man kunna checka så att det är en url som angivits
