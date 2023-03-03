@@ -2,6 +2,9 @@
 using System.Diagnostics;
 using System.IO;
 using System.Net.Sockets;
+using System.Runtime.CompilerServices;
+using System.Xml;
+using System.Xml.Linq;
 using static System.Console;
 
 namespace WebLinks
@@ -22,7 +25,9 @@ namespace WebLinks
             System.IO.Directory.CreateDirectory(path);
             string filename = "Weblinks.txt";
             Program p = new Program();
-            // p.AddLink("dn","www.dn.se","www.dn.se");
+            string homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            string filePath = Path.Combine(homeDirectory, "source", "repos", "WebLinks", "Weblinks.txt");
+
             PrintWelcome();
 
             string command;
@@ -40,9 +45,8 @@ namespace WebLinks
                 }
                 else if (command == "load")
                 {                    
-                    string loadPath;
                     //ImportLinksFromFile(loadPath); //Isak
-                    ImportLinksFromFile(command);
+                    p.ImportLinksFromFile(filePath);
                 }
                 else if (command.Split()[0] == "open")
                 {
@@ -52,6 +56,7 @@ namespace WebLinks
                 {
                     p.ListLinks();
                     PrintContinue();
+
                 }
                 else if (command == "add")
                 {
@@ -68,9 +73,7 @@ namespace WebLinks
                 }
                 else if (command == "save")
                 {
-                    NotYetImplemented("save");
-                    string saveFile;
-                    //SaveWebLinks(saveFile); //Isak
+                    p.SaveWebLinks(filePath);
                 }
                 else
                 {
@@ -86,9 +89,9 @@ namespace WebLinks
 
         private static void PrintWelcome()
         {
-            WriteLine("Hello and welcome to the ... program ...");
-            WriteLine("that does ... something.");
-            WriteLine("Write 'help' for help!");
+            WriteLine("Hello and welcome to the WebLinks program!\n\n");
+            WriteLine("Weblinks manages a library of links stored in a local file.\nFrom the terminal you can load the file, add new links, open links in your web browser and save the list to the file.");
+            WriteLine("\nWrite 'help' for help!");
         }
 
         private static void PrintContinue()
@@ -100,29 +103,23 @@ namespace WebLinks
         {
             string[] hstr = {
                 "help  - display this help",
-                "load  - load all links from a file",
+                "load  - load all links from the weblinks.txt file to the list",
+                "add   - manually enter data for a new link to the list",
+                "list  - display all currently loaded weblinks",
                 "open  - open a specific link",
+                "save  - save current list of weblinks to weblinks.txt file",
                 "quit  - quit the program"
             };
             foreach (string h in hstr) Console.WriteLine(h);
         }
-        public static void ImportLinksFromFile(string path)
+        public void ImportLinksFromFile(string filePath)
         //ImportLinksFromFile - loads weblinks from a standardfile (ex. weblinks.lis)
         //Links consists of a name, description and URL
-        {           
-            string homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            string filePath = Path.Combine(homeDirectory, "source", "repos", "WebLinks", "Weblinks.txt");
-            string text = File.ReadAllText(filePath);
+        {                      
+            var rows = File.ReadAllLines(filePath);
 
-            string[] rows = text.Split("\n");
-
-            var n = 0;
-
-            foreach (string row in rows)
-            {
-                n++;
-                WriteLine($"{n}, {row}");
-            }           
+            weblinks.AddRange(rows);
+            weblinks = weblinks.Distinct().ToList();
         }
         public void ListLinks()
         //Lists all weblinks currently loaded into weblinks list.
@@ -135,30 +132,16 @@ namespace WebLinks
                 $"{++i}: " +
                 $"Namn:        {link.Split(',')[0]}\n" +
                 $"   Beskrivning: {link.Split(',')[1]}\n" +
-                $"   URL          {link.Split(',')[2]}\n");
-            });
+                $"   URL          {link.Split(',')[2]}\n")
+            );
         }
         public void OpenWeblink(string Link)
         //Opens a link from the weblinks array in native browser
         {
             string[] splString = Link.Split(' ');
-            if (splString.Length == 1 ) {
-                WriteLine("Ange Länk och tryck på enter: ");
-                //int input;
-                if (int.TryParse(@ReadLine(), out int input)) // Om den gick att parsa till int
-                {
-                    //string link = weblinks.ElementAt(input-1);
-                    string[] link = weblinks.ElementAt(input).Split(',');
-                    WriteLine(link[2]);
-                    BrowserProces(@link[2]);
-                    // hämta länk från weblinks med int som index
-                }
-                else
-                {
-                    // sök in index ur weblinks med namn
-                    // hämta länk med index från weblinks
-                }
-
+            if (splString.Length == 1)
+            {
+                WriteLine("Ange Länk och tryck på enter");
                 BrowserProces(@ReadLine());
                 // Kommentar, här skulle man kunna checka så att det är en url som angivits
             }
@@ -198,10 +181,31 @@ namespace WebLinks
         {
             weblinks.Add($"{name},{info},{url}");
         }
-        public static void SaveWebLinks(string path)
+        public void SaveWebLinks(string path)
         //Save the current weblinks array to file
         {
-            //code...
+            if (File.Exists(path))
+            {
+                string input;
+                do
+                {
+                    Console.Write("File already exists. Overwrite (y/n)?: ");
+                    input = Console.ReadLine();
+                } while (input != "y" && input != "n");
+                if (input == "n") return;
+            }
+            File.Create(path).Dispose();
+            StreamWriter writer = new StreamWriter(path);
+
+            for (int i = 0; i < weblinks.Count; i++)
+            {
+                writer.WriteLine(weblinks[i]);
+                WriteLine("Writing: " + weblinks[i]);
+            }
+            writer.Close();
+            //Debug: Open the file:
+            //Process.Start("explorer", path);
+
         }
     }
 }
