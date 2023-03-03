@@ -22,12 +22,13 @@ namespace WebLinks
             System.IO.Directory.CreateDirectory(path);
             string filename = "Weblinks.txt";
             Program p = new Program();
+            // p.AddLink("dn","www.dn.se","www.dn.se");
             PrintWelcome();
 
             string command;
             do
             {
-                Console.Write(": ");
+                Write(": ");
                 command = ReadLine();
                 if (command == "quit")
                 {
@@ -45,8 +46,7 @@ namespace WebLinks
                 }
                 else if (command.Split()[0] == "open")
                 {
-                    // NotYetImplemented("open");
-                    OpenWeblink(command); //Alex
+                    p.OpenWeblink(command); //Alex
                 }
                 else if (command == "list")
                 {
@@ -57,11 +57,11 @@ namespace WebLinks
                 {
                     string addName, addUrl, addInfo;
                     Console.Write("Add: Lägg till en länk i listan (namn, url, beskrivning)\nNamn: ");
-                    addName = Console.ReadLine();
+                    addName = ReadLine();
                     Console.Write("URL: ");
-                    addUrl = Console.ReadLine();
+                    addUrl = ReadLine();
                     Console.Write("Beskrivning: ");
-                    addInfo = Console.ReadLine();
+                    addInfo = ReadLine();
                     p.AddLink(addName, addUrl, addInfo);
                     Console.WriteLine("\n");
                     PrintContinue();
@@ -121,35 +121,50 @@ namespace WebLinks
             foreach (string row in rows)
             {
                 n++;
-                Console.WriteLine($"{n}, {row}");
+                WriteLine($"{n}, {row}");
             }           
         }
         public void ListLinks()
         //Lists all weblinks currently loaded into weblinks list.
         {
-            Console.WriteLine("\nWeblinks:\n\n");
+            WriteLine("\nWeblinks:\n\n");
             int i = 0;
             weblinks.ForEach(link =>
             {
-                Console.WriteLine(
+                WriteLine(
                 $"{++i}: " +
                 $"Namn:        {link.Split(',')[0]}\n" +
                 $"   Beskrivning: {link.Split(',')[1]}\n" +
                 $"   URL          {link.Split(',')[2]}\n");
             });
         }
-        public static void OpenWeblink(string Link)
+        public void OpenWeblink(string Link)
         //Opens a link from the weblinks array in native browser
         {
             string[] splString = Link.Split(' ');
             if (splString.Length == 1 ) {
-                WriteLine("Ange Länk och tryck på enter");
+                WriteLine("Ange Länk och tryck på enter: ");
+                //int input;
+                if (int.TryParse(@ReadLine(), out int input)) // Om den gick att parsa till int
+                {
+                    //string link = weblinks.ElementAt(input-1);
+                    string[] link = weblinks.ElementAt(input).Split(',');
+                    WriteLine(link[2]);
+                    BrowserProces(@link[2]);
+                    // hämta länk från weblinks med int som index
+                }
+                else
+                {
+                    // sök in index ur weblinks med namn
+                    // hämta länk med index från weblinks
+                }
+
                 BrowserProces(@ReadLine());
                 // Kommentar, här skulle man kunna checka så att det är en url som angivits
             }
             else if (splString.Length == 2)
             {
-                WriteLine("Rätt mängd data för att utföra åtgärden");
+                WriteLine("Rätt mängd data för att utföra åtgärden: ");
                 BrowserProces(splString[1]);
             }
             else if (splString.Length > 2)
@@ -172,7 +187,12 @@ namespace WebLinks
                 browspr.Start();
             }
         }
-
+        /// <summary>
+        /// Lägger till en rad till weblinks
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="url"></param>
+        /// <param name="info"></param>
         public void AddLink(string name, string url, string info)
         //Add a weblink to the array from console.
         {

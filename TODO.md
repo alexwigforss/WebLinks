@@ -7,7 +7,7 @@
 Fördelning av metoder:
 
 - Load: Isak
- * -Implementera open med Weblink lista
+ * -Implementera load med Weblink lista
 - Open: Alex
  * -Implementera open med Weblink lista
 - Add: Sebastian
