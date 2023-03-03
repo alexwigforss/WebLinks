@@ -46,7 +46,11 @@ namespace WebLinks
                 else if (command == "load")
                 {                    
                     //ImportLinksFromFile(loadPath); //Isak
-                    p.ImportLinksFromFile(filePath);
+                    p.ImportLinksFromFile(filePath);                    
+                }
+                else if (command == "directory")
+                {
+                    p.ShowDirectory(filePath);
                 }
                 else if (command.Split()[0] == "open")
                 {
@@ -104,6 +108,7 @@ namespace WebLinks
             string[] hstr = {
                 "help  - display this help",
                 "load  - load all links from the weblinks.txt file to the list",
+                "directory - show all files",
                 "add   - manually enter data for a new link to the list",
                 "list  - display all currently loaded weblinks",
                 "open  - open a specific link",
@@ -112,6 +117,19 @@ namespace WebLinks
             };
             foreach (string h in hstr) Console.WriteLine(h);
         }
+
+        public void ShowDirectory(string directory)
+        {
+            string homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
+            string filePath = Path.Combine(homeDirectory, "source", "repos", "WebLinks", "Weblinks");
+            string[] files = Directory.GetFiles(filePath);
+
+            foreach (string file in files)
+            {
+                Console.WriteLine(Path.GetFileName(file));
+            }
+        }
+
         public void ImportLinksFromFile(string filePath)
         //ImportLinksFromFile - loads weblinks from a standardfile (ex. weblinks.lis)
         //Links consists of a name, description and URL
