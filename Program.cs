@@ -50,7 +50,7 @@ namespace WebLinks
                 {
                     p.ShowDirectory(filePath);
                 }
-                else if (command.Split()[0] == "open")
+                else if (command.Split(' ')[0] == "open")
                 {
                     p.OpenWeblink(command); //Alex
                 }
@@ -87,6 +87,10 @@ namespace WebLinks
                     if (command.Split(' ').Length == 2) { filePath = p.ChangeDirectory(filePath, command.Split(' ')[1]); p.PresentWorkingDirectory(filePath); }
                     else WriteLine("Syntax for 'cd' : 'cd <directory>' to go to directory    'cd ..' to move up one directory");
                 }
+                else if (command.Split(' ')[0] == "mkdir")
+                {
+                    p.CreateDirectory(filePath, command);
+                }
                 else
                 {
                     WriteLine($"Unknown command '{command}'");
@@ -114,23 +118,25 @@ namespace WebLinks
         private static void WriteTheHelp()
         {
             string[] hstr = {
-                "help  - display this help",
-                "load  - load all links from the weblinks.txt file to the list",
-                "directory - show all files",
-                "add   - manually enter data for a new link to the list",
-                "list  - display all currently loaded weblinks",
-                "open  - open a specific link",
-                "save  - save current list of weblinks to weblinks.txt file",
-                "quit  - quit the program"
+                "  help            - display this help",
+                "  load <file.txt> - load all links from <file.txt> file to the list",
+                "  pwd             - show path to current working directory",
+                "  cd <folder>     - change working directory to <folder>. Use cd '..' to go up one folder",
+                "  mkdir <folder>  - create new folder <folder> in working directory",
+                "  directory       - show all files in working directory",
+                "  add             - manually enter data for a new link to the list",
+                "  list            - display all currently loaded weblinks",
+                "  open <n>        - open the link with number n (1,2.3....) from the list",
+                "  save <file.txt> - save current list of weblinks to file",
+                "  quit            - quit the program",
+                ""
             };
             foreach (string h in hstr) Console.WriteLine(h);
         }
 
         public void ShowDirectory(string directory)
         {
-            string homeDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-            string filePath = Path.Combine(homeDirectory, "source", "repos", "WebLinks", "Weblinks");
-            string[] files = Directory.GetFiles(filePath);
+            string[] files = Directory.GetFiles(directory);
 
             foreach (string file in files)
             {
@@ -297,6 +303,16 @@ namespace WebLinks
             if (Directory.Exists(newPath) && folder != ".") return newPath;
             WriteLine("Folder does not exist");
             return path;
+        }
+        public void CreateDirectory(string path, string folder)
+        {
+            if (folder.Split(' ').Length < 2) { WriteLine("Syntax error. Try: 'mkdir <new foldername>'"); return; }
+
+            string name = folder.Split(' ')[1];
+            string fullPath = Path.Combine(path, name);
+            if (Directory.Exists(fullPath)) { WriteLine("Folder already exists."); return; }
+            Directory.CreateDirectory(fullPath);
+            return;
         }
     }
 }
