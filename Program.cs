@@ -1,11 +1,11 @@
-﻿using System;
+﻿//using System;
 using System.Diagnostics;
-using System.IO;
-using System.Net.Sockets;
-using System.Reflection.PortableExecutable;
-using System.Runtime.CompilerServices;
-using System.Xml;
-using System.Xml.Linq;
+//using System.IO;
+//using System.Net.Sockets;
+//using System.Reflection.PortableExecutable;
+//using System.Runtime.CompilerServices;
+//using System.Xml;
+//using System.Xml.Linq;
 using static System.Console;
 
 namespace WebLinks
@@ -52,7 +52,14 @@ namespace WebLinks
                 }
                 else if (command.Split()[0] == "open")
                 {
-                    p.OpenWeblink(command); //Alex
+                    if (p.weblinks.Count() > 0)
+                    {
+                        p.OpenWeblink(command); //Alex
+                    }
+                    else
+                    {
+                        WriteLine("List is empty. Plz load a weblink file");
+                    }
                 }
                 else if (command == "list")
                 {
