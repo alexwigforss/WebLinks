@@ -132,8 +132,9 @@ namespace WebLinks
                 $"{++i}: " +
                 $"Namn:        {link.Split(',')[0]}\n" +
                 $"   Beskrivning: {link.Split(',')[1]}\n" +
-                $"   URL          {link.Split(',')[2]}\n")
-            );
+                $"   URL          {link.Split(',')[2]}\n");
+            }
+            ) ;
         }
         public void OpenWeblink(string Link)
         //Opens a link from the weblinks array in native browser
