@@ -43,8 +43,7 @@ namespace WebLinks
                 }
                 else if (command == "load")
                 {
-                    //ImportLinksFromFile(loadPath); //Isak
-                    p.ImportLinksFromFile(filePath, "weblinks.txt");                   
+                    p.ImportLinksFromFile(filePath, "weblinks.txt");
                 }
                 else if (command == "directory")
                 {
@@ -162,11 +161,14 @@ namespace WebLinks
         public void ImportLinksFromFile(string path, string file)
         //ImportLinksFromFile - loads weblinks from a standardfile (ex. weblinks.lis)
         //Links consists of a name, description and URL
-        {                      
-            string filePath = Path.Combine(path, file);
-            var rows = File.ReadAllLines(filePath);
+        {
+            Console.WriteLine("Skriv vilken fil du vil ladda: ");
 
-            weblinks.AddRange(rows);
+            var pfile = Console.ReadLine();
+            var kfile = Path.Combine(path, pfile);
+            var phile = File.ReadLines(kfile);
+
+            weblinks.AddRange(phile);
             weblinks = weblinks.Distinct().ToList();
         }
         public void ListLinks()
@@ -182,7 +184,7 @@ namespace WebLinks
                 $"   Beskrivning: {link.Split(',')[1]}\n" +
                 $"   URL          {link.Split(',')[2]}\n");
             }
-            ) ;
+            );
         }
         /// <summary>
         /// Hittar länk i listan med index eller label
@@ -197,10 +199,10 @@ namespace WebLinks
                 WriteLine("Ange Namn Eller Nummer för länken du vill öppna.");
                 string rl = ReadLine();
                 int index;
-                if(int.TryParse(rl, out index))
+                if (int.TryParse(rl, out index))
                 {
                     // Om Int hämta rad med index
-                    string[] a = weblinks.ElementAt(index-1).Split(',');
+                    string[] a = weblinks.ElementAt(index - 1).Split(',');
                     BrowserProces(a[2].Trim());
                 }
                 else
@@ -294,7 +296,7 @@ namespace WebLinks
             proc.StartInfo.RedirectStandardOutput = true;
             proc.Start();
             StreamReader reader = proc.StandardOutput;
-            string input = reader.ReadToEnd().Replace('|',',');
+            string input = reader.ReadToEnd().Replace('|', ',');
             proc.WaitForExit();
             weblinks.Add(input);
         }
@@ -308,7 +310,7 @@ namespace WebLinks
             if (folder == "..")
             {
                 string[] splitPath = path.Split('\\');
-                for (int i = 0; i < splitPath.Length - 1; i++) 
+                for (int i = 0; i < splitPath.Length - 1; i++)
                 {
                     newPath = Path.Combine(newPath, splitPath[i]);
                 }
