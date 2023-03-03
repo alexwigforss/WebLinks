@@ -143,17 +143,20 @@ namespace WebLinks
             if (splString.Length == 1)
             {
                 WriteLine("Ange Namn Eller Nummer för länken du vill öppna.");
+                string rl = ReadLine();
                 int index;
-                if(int.TryParse(ReadLine(), out index))
+                if(int.TryParse(rl, out index))
                 {
-                    string[] a = weblinks.ElementAt(index-1).Split(',');
                     // Om Int hämta rad med index
+                    string[] a = weblinks.ElementAt(index-1).Split(',');
                     BrowserProces(a[2].Trim());
                 }
                 else
                 {
-                    // Om sträng hitta sök index sedan rad.
-                    BrowserProces(@ReadLine());
+                    // Om sträng hitta index med contains
+                    index = weblinks.FindIndex(a => a.Contains(rl));
+                    string[] a = weblinks.ElementAt(index).Split(',');
+                    BrowserProces(a[2].Trim());
                 }
                 // Kommentar, här skulle man kunna checka så att det är en url som angivits
             }
