@@ -1,11 +1,11 @@
-﻿using System;
+﻿//using System;
 using System.Diagnostics;
-using System.IO;
-using System.Net.Sockets;
-using System.Reflection.PortableExecutable;
-using System.Runtime.CompilerServices;
-using System.Xml;
-using System.Xml.Linq;
+//using System.IO;
+//using System.Net.Sockets;
+//using System.Reflection.PortableExecutable;
+//using System.Runtime.CompilerServices;
+//using System.Xml;
+//using System.Xml.Linq;
 using static System.Console;
 
 namespace WebLinks
@@ -52,7 +52,14 @@ namespace WebLinks
                 }
                 else if (command.Split(' ')[0] == "open")
                 {
-                    p.OpenWeblink(command); //Alex
+                    if (p.weblinks.Count() > 0)
+                    {
+                        p.OpenWeblink(command); //Alex
+                    }
+                    else
+                    {
+                        WriteLine("List is empty. Plz load a weblink file");
+                    }
                 }
                 else if (command == "list")
                 {
@@ -126,7 +133,10 @@ namespace WebLinks
                 "  directory       - show all files in working directory",
                 "  add             - manually enter data for a new link to the list",
                 "  list            - display all currently loaded weblinks",
-                "  open <n>        - open the link with number n (1,2.3....) from the list",
+                "  open            - open a specific link",
+                "       e.g. open [Index] open Url by list index",
+                "            open [Title] open Url by Title",
+                "            open (without flag will prompt u for above)",
                 "  save <file.txt> - save current list of weblinks to file",
                 "  quit            - quit the program",
                 ""
